@@ -1,6 +1,9 @@
 # Ansible Role for dotnet core SDK installation
 
-This role can be used to install the dotnet core SDK in `/opt/dotnet/sdk`
+This role can be used to install the dotnet core SDK.
+
+Tested on:
+- Raspbian Buster Lite
 
 ## Role Variables
 
@@ -15,3 +18,7 @@ This role can be used to install the dotnet core SDK in `/opt/dotnet/sdk`
 - hosts: all
   roles:
     - dotnet-core-sdk
+```
+
+## License
+MIT
