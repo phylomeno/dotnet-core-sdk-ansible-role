@@ -1,40 +1,41 @@
 ---
-  - name: Create directory /opt/dotnet/sdk-install
+  - name: Create directory {{ archive_path }} 
     file:
-      path: /opt/dotnet/sdk-install
+      path: '{{ archive_path }}' 
       state: directory
       mode: 0755
     become: true
 
-  - name: Create directory /opt/dotnet/sdk
+  - name: Create directory {{ sdk_path }}
     file:
-      path: /opt/dotnet/sdk
+      path: '{{ sdk_path }}'
       state: directory
       mode: 0755
     become: true
 
   - name: Download dotnet sdk installation archive
     get_url:
-      url: https://download.visualstudio.microsoft.com/download/pr/349f13f0-400e-476c-ba10-fe284b35b932/44a5863469051c5cf103129f1423ddb8/dotnet-sdk-3.1.102-linux-arm.tar.gz
-      dest: /opt/dotnet/sdk-install/
+      url: '{{ archive_url }}'
+      dest: '{{ archive_path }}'
+    register: download_result
     become: true
 
   - name: Unarchive dotnet sdk installation archive
     unarchive:
       remote_src: yes
-      src: /opt/dotnet/sdk-install/dotnet-sdk-3.1.102-linux-arm.tar.gz
-      dest: /opt/dotnet/sdk
-      creates: /opt/dontnet/sdk 
+      src: '{{ download_result.dest }}'
+      dest: '{{ sdk_path }}'
+      creates: '{{ sdk_path }}'
     become: true
 
   - name: Add DOTNET_ROOT environment variable
     copy:
       dest: /etc/profile.d/dotnet-root-env.sh
-      content: 'DOTNET_ROOT=/opt/dotnet/sdk'
+      content: 'DOTNET_ROOT={{ sdk_path }}'
     become: true
   
   - name: Add dotnet sdk to $PATH
     copy:
-      dest: /etc/profile.d/dotnet-sdk-path-env.sh
-      content: 'PATH=$PATH:/opt/dotnet/sdk'
+      dest: /etc/profile.d/dotnet-sdk_path-env.sh
+      content: 'PATH=$PATH:{{ sdk_path }}'
     become: true
