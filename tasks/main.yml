@@ -1,41 +1,40 @@
 ---
-  - name: Create directory {{ archive_path }} 
+  - name: Create directory {{ archive_path }}
     file:
-      path: '{{ archive_path }}' 
+      path: "{{ archive_path }}"
       state: directory
       mode: 0755
     become: true
 
   - name: Create directory {{ sdk_path }}
     file:
-      path: '{{ sdk_path }}'
+      path: "{{ sdk_path }}"
       state: directory
       mode: 0755
     become: true
 
   - name: Download dotnet sdk installation archive
     get_url:
-      url: '{{ archive_url }}'
-      dest: '{{ archive_path }}'
+      url: "{{ archive_url }}"
+      dest: "{{ archive_path }}"
     register: download_result
     become: true
 
   - name: Unarchive dotnet sdk installation archive
     unarchive:
       remote_src: yes
-      src: '{{ download_result.dest }}'
-      dest: '{{ sdk_path }}'
-      creates: '{{ sdk_path }}'
+      src: "{{ download_result.dest }}"
+      dest: "{{ sdk_path }}"
     become: true
 
   - name: Add DOTNET_ROOT environment variable
     copy:
       dest: /etc/profile.d/dotnet-root-env.sh
-      content: 'DOTNET_ROOT={{ sdk_path }}'
+      content: "DOTNET_ROOT={{ sdk_path }}"
     become: true
   
   - name: Add dotnet sdk to $PATH
     copy:
       dest: /etc/profile.d/dotnet-sdk_path-env.sh
-      content: 'PATH=$PATH:{{ sdk_path }}'
+      content: "PATH=$PATH:{{ sdk_path }}"
     become: true
