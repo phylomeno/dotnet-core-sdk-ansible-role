@@ -30,11 +30,11 @@
   - name: Add DOTNET_ROOT environment variable
     copy:
       dest: /etc/profile.d/dotnet-root-env.sh
-      content: "DOTNET_ROOT={{ sdk_path }}"
+      content: "export DOTNET_ROOT={{ sdk_path }}"
     become: true
   
   - name: Add dotnet sdk to $PATH
     copy:
-      dest: /etc/profile.d/dotnet-sdk_path-env.sh
-      content: "PATH=$PATH:{{ sdk_path }}"
+      dest: /etc/profile.d/dotnet-sdk-path-env.sh
+      content: "export PATH=$PATH:{{ sdk_path }}:$HOME/.dotnet/tools"
     become: true
